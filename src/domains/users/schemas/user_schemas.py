@@ -13,3 +13,7 @@ class UserSchema(CreateUserInputSchema):
 
     class Config:
         orm_mode = True
+
+
+class AuthUserSchema(CreateUserInputSchema):
+    ...

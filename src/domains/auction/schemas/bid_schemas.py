@@ -1,27 +1,31 @@
-from decimal import Decimal
-
 import pydantic as pd
+
+from src.utils.custom_data_types import PriceType
 
 
 class CreateBidInputSchema(pd.BaseModel):
-    amount: Decimal
+    amount: PriceType
     user_username: str
     auction_id: int
+
+    class Config:
+        allow_mutation = False
 
 
 class CreateBidOutputSchema(pd.BaseModel):
     bid_id: int
-    current_price: Decimal
+    current_price: PriceType
 
 
 class BidSchema(pd.BaseModel):
     id: int
     auction_id: int
     user_username: str
-    amount: Decimal
+    amount: PriceType
 
     class Config:
         orm_mode = True
+        allow_mutation = False
 
 
 class BidsSchema(pd.BaseModel):

@@ -1,7 +1,6 @@
 from src.domains.auction.schemas.bid_schemas import (BidsSchema,
                                                      CreateBidOutputSchema)
-
-from .abstract_presenter import AbstractPresenter
+from src.utils.abstract_presenter import AbstractPresenter
 
 
 class CreateBidPresenter(AbstractPresenter):

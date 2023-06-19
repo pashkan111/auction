@@ -3,6 +3,7 @@ from typing import AsyncGenerator
 
 import pytest
 import pytest_asyncio
+from faker import Faker
 from sqlalchemy.ext.asyncio import (AsyncSession, async_scoped_session,
                                     create_async_engine)
 from sqlalchemy.orm import sessionmaker
@@ -69,3 +70,8 @@ def storage_session(async_session):
         bid_storage,
         user_storage
     )
+
+
+@pytest.fixture(scope="session")
+def faker():
+    return Faker()
