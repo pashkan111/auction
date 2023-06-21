@@ -39,3 +39,19 @@ class DatabaseBidStorage(AbstractBidRepository):
         bids_executed = await self.session.execute(query)
         bids = bids_executed.scalars().fetchall()
         return bids
+
+    async def update_bid(self, update_data: bid_schemas.UpdateBidSchema) -> Bid:
+        bid = await self.session.execute(
+            sa.update(Bid)
+            .returning(Bid)
+            .values(**update_data.dict(exclude={'bid_id'}))
+            .where(Bid.id == update_data.bid_id)
+        )
+        return bid.scalar()
+
+    async def get_bid_by_id(self, bid_id: int) -> Bid:
+        bid = await self.session.execute(
+            sa.select(Bid)
+            .where(Bid.id == bid_id)
+        )
+        return bid.scalar()

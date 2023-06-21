@@ -27,6 +27,7 @@ class Auction(Base):
     )
     product = relationship('Product', backref='auctions')
     current_price = sa.Column(sa.DECIMAL(10, 2))
+    # status = 
 
 
 class Bid(Base):
@@ -42,3 +43,4 @@ class Bid(Base):
     )
     user = relationship('User', backref='bids')
     amount = sa.Column(sa.DECIMAL(10, 2), nullable=False)
+    is_win = sa.Column(sa.Boolean, default=False)

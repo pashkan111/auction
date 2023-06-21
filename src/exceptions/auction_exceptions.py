@@ -7,3 +7,7 @@ class AuctionDoesNotExists(DoesNotExistsException):
 
 class InvalidBidAmount(InvalidDataException):
     message = "Invalid bid amount. Must be greater than current price"
+
+
+class BidDoesNotExists(DoesNotExistsException):
+    message = "Bid does not exists"

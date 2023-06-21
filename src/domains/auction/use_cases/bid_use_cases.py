@@ -1,6 +1,7 @@
 from src.domains.auction.schemas import bid_schemas
 from src.domains.auction.services.auction import validate_bid
-from src.exceptions.auction_exceptions import AuctionDoesNotExists
+from src.exceptions.auction_exceptions import (AuctionDoesNotExists,
+                                               BidDoesNotExists)
 from src.exceptions.exceptions import StorageException
 from src.exceptions.user_exceptions import UserDoesNotExists
 from src.utils.abstract_use_case import AbstractUseCase
@@ -34,3 +35,16 @@ class GetBidsUseCase(AbstractUseCase):
         async with self.storage_context as storage:
             bids = await storage.bid_repository.get_bids(filter_params)
         return self.presenter.present(bids)
+
+
+class SetBidWinnerUseCase(AbstractUseCase):
+    async def execute(self, data: bid_schemas.UpdateBidSchema):
+        async with self.storage_context as storage:
+            bid = await storage.bid_repository.get_bid_by_id(data.bid_id)
+            if bid is None:
+                raise BidDoesNotExists
+            
+            auction = await storage.auction_repository.get_auction_by_bid_id(data.bid_id)
+            validate_bid(auction, data.amount)
+
+            bid = await storage.bid_repository.update_bid(data)

@@ -24,3 +24,11 @@ class DatabaseAuctionRepository(AbstractAuctionRepository):
     async def get_auction_by_id(self, auction_id: int) -> auction_schemas.AuctionSchema:
         auction = await self.session.get(Auction, auction_id)
         return auction
+
+    async def get_auction_by_bid_id(self, bid_id: int) -> Auction:
+        auction = await self.session.execute(
+            sa.select(Auction)
+            .join(Bid, Bid.auction_id == Auction.id)
+            .where(Bid.id == bid_id)
+        )
+        return auction.scalar()

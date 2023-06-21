@@ -40,3 +40,13 @@ class GetBidsInputSchema(pd.BaseModel):
     offset: int | None = None
     user_username: str | None = None
     auction_id: int | None = None
+
+
+class BidIdSchema(pd.BaseModel):
+    bid_id: int
+
+
+class UpdateBidSchema(pd.BaseModel):
+    bid_id: int
+    amount: PriceType | None = None
+    is_win: bool | None = None

@@ -16,3 +16,11 @@ class AbstractBidRepository(abc.ABC):
         filter_params: bid_schemas.GetBidsInputSchema
     ) -> Sequence[Bid]:
         ...
+
+    @abc.abstractmethod
+    async def update_bid(self, update_data: bid_schemas.UpdateBidSchema) -> Bid:
+        ...
+
+    @abc.abstractmethod
+    async def get_bid_by_id(self, bid_id: int) -> Bid:
+        ...
