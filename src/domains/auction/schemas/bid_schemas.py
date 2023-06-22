@@ -49,4 +49,4 @@ class BidIdSchema(pd.BaseModel):
 class UpdateBidSchema(pd.BaseModel):
     bid_id: int
     amount: PriceType | None = None
-    is_win: bool | None = None
+

@@ -1,5 +1,7 @@
+from dependency_injector.wiring import Provide, inject
 from fastapi import APIRouter, Depends
 
+from src.domains.auction.containers import UseCaseContainer
 from src.domains.auction.presenters.presenters import (AbstractPresenter,
                                                        CreateBidPresenter,
                                                        GetBidsPresenter)
@@ -16,12 +18,11 @@ bid_router = APIRouter(prefix='/bids', tags=['bids'])
 
 @bid_router.post('/', response_model=CreateBidOutputSchema)
 @result_decorator
+@inject
 async def create_bid(
     data: CreateBidInputSchema,
-    storage_context: StorageSessionContext = Depends(get_storage_session_context),
+    use_case: bid_use_cases.CreateBidUseCase = Depends(Provide[UseCaseContainer.create_bid_use_case]),
 ):
-    presenter: AbstractPresenter = CreateBidPresenter()
-    use_case = bid_use_cases.CreateBidUseCase(storage_context, presenter)
     result = await use_case.execute(data)
     return result
 

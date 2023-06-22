@@ -6,6 +6,3 @@ from src.utils.abstract_presenter import AbstractPresenter
 class CreateUserPresenter(AbstractPresenter):
     def present(self, model: User) -> UserSchema:
         return UserSchema.from_orm(model)
-
-    def get_presented_data(self):
-        return super().get_presented_data()
