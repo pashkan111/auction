@@ -1,6 +1,5 @@
-from collections.abc import Sequence
-
 import sqlalchemy as sa
+from sqlalchemy import func
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.domains.auction.models import Auction, Bid
@@ -32,3 +31,11 @@ class DatabaseAuctionRepository(AbstractAuctionRepository):
             .where(Bid.id == bid_id)
         )
         return auction.scalar()
+
+    async def get_current_price(self, auction_id: int) -> int | None:
+        price = await self.session.execute(
+            sa.select(func.max(Bid.amount))
+            .join(Auction, Auction.id == Bid.auction_id)
+            .where(Auction.id == auction_id)
+        )
+        return price.scalar()

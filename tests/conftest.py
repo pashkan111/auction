@@ -4,11 +4,15 @@ from typing import AsyncGenerator
 import pytest
 import pytest_asyncio
 from faker import Faker
+from fastapi.testclient import TestClient
 from sqlalchemy.ext.asyncio import (AsyncSession, async_scoped_session,
                                     create_async_engine)
 from sqlalchemy.orm import sessionmaker
 
 from config import settings
+from src.domains.auction.schemas import auction_schemas
+from src.domains.users.schemas.user_schemas import CreateUserInputSchema
+from src.utils.custom_data_types import PriceType
 from storage.auction_storage.database_storage import DatabaseAuctionRepository
 from storage.bid_storage.database_storage import DatabaseBidStorage
 from storage.storage_session import StorageSessionContext
@@ -75,3 +79,30 @@ def storage_session(async_session):
 @pytest.fixture(scope="session")
 def faker():
     return Faker()
+
+
+@pytest.fixture(scope="module")
+def test_client():
+    from main import app
+    client = TestClient(app)
+    yield client
+
+
+@pytest_asyncio.fixture(scope="function")
+async def user(storage_session):
+    username = 'username'
+    password = 'password'
+    async with storage_session as storage:
+        user_data = CreateUserInputSchema(username=username, password=password)
+        user = await storage.user_repository.create_user(user_data)
+        return user
+
+
+@pytest_asyncio.fixture(scope="function")
+async def auction(storage_session):
+    async with storage_session as storage:
+        auction_data = auction_schemas.CreateAuctionInputSchema(
+            current_price=PriceType('101')
+        )
+        auction = await storage.auction_repository.create_auction(auction_data)
+        return auction

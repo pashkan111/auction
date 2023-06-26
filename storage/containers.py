@@ -1,26 +1,30 @@
 from dependency_injector import containers, providers
 
-import storage
+from storage.auction_storage import database_storage as auction_storage
+from storage.bid_storage import database_storage as bid_storage
+from storage.db_config import Session
+from storage.storage_session import StorageSessionContext
+from storage.user_storage import database_storage as user_storage
 
 
 class RepositoryContainer(containers.DeclarativeContainer):
-    session = providers.Singleton(storage.Session)
+    session = providers.Factory(Session)
 
     auction_repo = providers.Singleton(
-        storage.DatabaseAuctionRepository,
+        auction_storage.DatabaseAuctionRepository,
         session=session
     )
     bid_repo = providers.Singleton(
-        storage.DatabaseBidStorage,
+        bid_storage.DatabaseBidStorage,
         session=session
     )
     user_repo = providers.Singleton(
-        storage.DatabaseUserStorage,
+        user_storage.DatabaseUserStorage,
         session=session
     )
 
     session_storage = providers.Singleton(
-        storage.StorageSessionContext,
+        StorageSessionContext,
         auction_repository=auction_repo,
         bid_repository=bid_repo,
         user_repository=user_repo,

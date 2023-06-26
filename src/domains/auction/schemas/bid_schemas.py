@@ -11,6 +11,10 @@ class CreateBidInputSchema(pd.BaseModel):
     class Config:
         allow_mutation = False
 
+    @pd.validator('amount', pre=True)
+    def validate_date(cls, value):
+        return str(value)
+
 
 class CreateBidOutputSchema(pd.BaseModel):
     bid_id: int

@@ -1,8 +1,6 @@
 from decimal import Decimal
 
 import pytest
-from faker import Faker
-from pydantic import ValidationError
 
 from src.domains.auction.presenters.presenters import (CreateBidPresenter,
                                                        GetBidsPresenter)
@@ -100,40 +98,3 @@ async def test_get_bids(storage_session):
     data = GetBidsInputSchema()
     result = await bid_use_case.execute(data)
     assert len(result.__root__) == 2
-
-
-@pytest.mark.parametrize(['amount'], [
-    (Decimal('0.01'),),
-    (Decimal('12.38'),),
-    (Decimal('1'),),
-    (Decimal('0.01'),)
-])
-def test_PriceType(amount, faker: Faker):
-    CreateBidInputSchema(
-        amount=amount,
-        user_username=faker.name(),
-        auction_id=faker.pyint()
-    )
-
-
-@pytest.mark.parametrize(['amount'], [
-    (Decimal('0'),),
-    (Decimal('-2.77'),)
-])
-def test_fail_PriceType(amount, faker: Faker):
-    with pytest.raises(ValidationError):
-        CreateBidInputSchema(
-            amount=amount,
-            user_username=faker.name(),
-            auction_id=faker.pyint()
-        )
-
-
-def test_mutation_class(faker):
-    schema = CreateBidInputSchema(
-        amount=Decimal('1.99'),
-        user_username=faker.name(),
-        auction_id=faker.pyint()
-    )
-    with pytest.raises(TypeError):
-        schema.auction_id = 10

@@ -16,3 +16,7 @@ class AbstractAuctionRepository(abc.ABC):
     @abc.abstractmethod
     async def get_auction_by_bid_id(self, bid_id: int) -> Auction:
         ...
+
+    @abc.abstractmethod
+    async def get_current_price(self, auction_id: int) -> int:
+        ...

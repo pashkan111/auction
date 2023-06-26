@@ -15,6 +15,5 @@ async def test_create_user(storage_session):
     create_user_use_case = CreateUserUseCase(storage_session, user_presenter)
     user = await create_user_use_case.execute(user_data)
     # assert user.password == get_password_hash(password)
-    # assert user.username == username
-    # assert user.created is not None
-    assert get_password_hash(password) == get_password_hash(password) == get_password_hash(password)
+    assert user.username == username
+    assert user.created is not None
