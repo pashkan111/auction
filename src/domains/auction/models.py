@@ -26,7 +26,7 @@ class Auction(Base):
         sa.Integer, sa.ForeignKey('product.id'), nullable=True
     )
     product = relationship('Product', backref='auctions')
-    current_price = sa.Column(sa.DECIMAL(10, 2))
+    start_price = sa.Column(sa.DECIMAL(10, 2))
     # status = 
 
 

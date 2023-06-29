@@ -63,17 +63,19 @@ async def async_session() -> AsyncGenerator[AsyncSession, None]:
     await async_engine.dispose()
 
 
-@pytest.fixture(scope="function")
-def storage_session(async_session):
+@pytest_asyncio.fixture(scope="function")
+async def storage_session(async_session):
     auction_storage = DatabaseAuctionRepository(async_session)
     bid_storage = DatabaseBidStorage(async_session)
     user_storage = DatabaseUserStorage(async_session)
-    return StorageSessionContext(
+    storage = StorageSessionContext(
         async_session,
         auction_storage,
         bid_storage,
         user_storage
     )
+    async with storage as storage:
+        yield storage
 
 
 @pytest.fixture(scope="session")
@@ -102,7 +104,7 @@ async def user(storage_session):
 async def auction(storage_session):
     async with storage_session as storage:
         auction_data = auction_schemas.CreateAuctionInputSchema(
-            current_price=PriceType('101')
+            start_price=PriceType('101')
         )
         auction = await storage.auction_repository.create_auction(auction_data)
         return auction

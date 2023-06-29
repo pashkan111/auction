@@ -15,7 +15,8 @@ class CreateBidUseCase(AbstractUseCase):
             if auction is None:
                 raise AuctionDoesNotExists
 
-            validate_bid(auction, bid_data.amount)
+            auction_current_price = await self.storage_context.auction_repository.get_current_price(auction.id)
+            validate_bid(auction_current_price, bid_data.amount)
 
             user = await self.storage_context.user_repository.get_user_by_username(bid_data.user_username)
             if user is None:

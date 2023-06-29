@@ -48,22 +48,32 @@ def test_mutation_class(faker):
 async def test_auction_current_price(auction, storage_session, user):
     bid1_amount = PriceType('101.00')
     bid2_amount = PriceType('270.00')
-    async with storage_session as storage:
-        await storage.bid_repository.create_bid(
-            CreateBidInputSchema(
-                amount=bid1_amount,
-                user_username=user.username,
-                auction_id=auction.id
-            )
+    bid3_amount = PriceType('450.00')
+    bid4_amount = PriceType('120.00')
+    await storage_session.bid_repository.create_bid(
+        CreateBidInputSchema(
+            amount=bid1_amount,
+            user_username=user.username,
+            auction_id=auction.id
         )
-        await storage.bid_repository.create_bid(
-            CreateBidInputSchema(
-                amount=bid2_amount,
-                user_username=user.username,
-                auction_id=auction.id
-            )
+    )
+    await storage_session.bid_repository.create_bid(
+        CreateBidInputSchema(
+            amount=bid2_amount,
+            user_username=user.username,
+            auction_id=auction.id
         )
+    )
 
-    async with storage_session as storage:
-        auction_current_price = await storage.auction_repository.get_current_price(auction.id)
-        assert auction_current_price == bid2_amount
+    auction_current_price = await storage_session.auction_repository.get_current_price(auction.id)
+    assert auction_current_price == bid2_amount
+
+    await storage_session.bid_repository.create_bid(
+        CreateBidInputSchema(
+            amount=bid3_amount,
+            user_username=user.username,
+            auction_id=auction.id
+        )
+    )
+    auction_current_price = await storage_session.auction_repository.get_current_price(auction.id)
+    assert auction_current_price == bid3_amount
