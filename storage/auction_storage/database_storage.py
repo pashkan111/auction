@@ -42,7 +42,7 @@ class DatabaseAuctionRepository(AbstractAuctionRepository):
         query = (
             sa.select(case_expr)
             .select_from(Auction)
-            .join(Bid, Auction.id == Bid.auction_id)
+            .join(Bid, Auction.id == Bid.auction_id, isouter=True)
             .where(Auction.id == auction_id)
             .group_by(Auction.start_price)
         )

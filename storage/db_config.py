@@ -23,8 +23,6 @@ async_engine = create_async_engine(
 
 
 async def init_db():
-    from src.domains.auction.models import Base
-    from src.domains.users.models import Base
     async with async_engine.begin() as conn:
         await conn.run_sync(Base.metadata.create_all)
 

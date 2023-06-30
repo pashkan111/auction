@@ -37,7 +37,7 @@ async def test_create_bid(storage_session):
         CreateUserInputSchema(username='user1', password='123')
     )
     auction = await storage_session.auction_repository.create_auction(
-        CreateAuctionInputSchema(current_price=Decimal('100.00'))
+        CreateAuctionInputSchema(start_price=PriceType('100.00'))
     )
     bid_use_case = CreateBidUseCase(storage_session, bid_presenter)
     data = CreateBidInputSchema(

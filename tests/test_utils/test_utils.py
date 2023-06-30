@@ -46,6 +46,8 @@ def test_mutation_class(faker):
 
 @pytest.mark.asyncio
 async def test_auction_current_price(auction, storage_session, user):
+    auction_current_price = await storage_session.auction_repository.get_current_price(auction.id)
+    assert auction_current_price == auction.start_price
     bid1_amount = PriceType('101.00')
     bid2_amount = PriceType('270.00')
     bid3_amount = PriceType('450.00')
